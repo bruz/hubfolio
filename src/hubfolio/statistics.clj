@@ -9,7 +9,7 @@
   (let [response (github user-repos github-auth)]
     (-> response first :url)))
 
-(defrecord Statistics [github-auth]
+(defrecord Statistics [github-auth cache-config]
   component/Lifecycle
 
   (start [component]
@@ -18,5 +18,5 @@
     ;; no-op
     (assoc component :statistics nil)))
 
-(defn new-statistics [github-auth]
-  (map->Statistics {:github-auth github-auth}))
+(defn new-statistics [github-auth cache-config]
+  (map->Statistics {:github-auth github-auth :cache-config cache-config}))
