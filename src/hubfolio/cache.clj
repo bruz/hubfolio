@@ -9,8 +9,8 @@
   (car/wcar config (car/set key value))
   value)
 
-(defn cache [config key value]
-  (let [stored-value (get config key)]
-    (if stored-value
-      stored-value
-      (set config key value))))
+(defmacro cache [config key & body]
+  `(let [stored-value# (get ~config ~key)]
+     (if stored-value#
+       stored-value#
+       (set ~config ~key ~@body))))
