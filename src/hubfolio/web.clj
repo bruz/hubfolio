@@ -23,4 +23,4 @@
     (assoc component :handler nil)))
 
 (defn new-web-handler []
-  (map->WebHandler {:stats-conn nil}))
+  (map->WebHandler {}))
