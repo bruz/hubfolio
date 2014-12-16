@@ -5,7 +5,7 @@
             :url "http://choosealicense.com/"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [com.stuartsierra/component "0.2.2"]
-                 [tentacles "0.2.5"]
+                 [tentacles "0.2.7"]
                  [compojure "1.2.1"]
                  [hiccup "1.0.5"]
                  [ring "1.3.1"]
