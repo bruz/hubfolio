@@ -1,16 +1,21 @@
 (ns hubfolio.statistics
   (:require [com.stuartsierra.component :as component]
-            [hubfolio.github :refer [user-repos]]
+            [hubfolio.github :as github]
             [hubfolio.cache :refer [cache]]))
 
-(defn github [resource github-auth]
-  (resource github-auth))
+(defn github [resource github-auth & xs]
+  (let [response (apply resource github-auth xs)]
+    (println "call-remaining: " (-> response meta :api-meta :call-remaining))
+    response))
 
-(defn repo-url [stats-conn]
-  (let [{:keys [cache-config github-auth]} stats-conn]
-    (cache cache-config "repo-url"
-      (let [response (github user-repos github-auth)]
-        (-> response first :url)))))
+(defn cached [resource conn key & xs]
+  (let [{:keys [cache-config github-auth]} conn]
+    (cache cache-config key
+      (apply github resource github-auth xs))))
+
+(defn repos [username conn]
+  (let [key (str "repos:" username)]
+    (cached github/user-repos conn key username)))
 
 (defrecord Statistics [github-auth cache-config])
 

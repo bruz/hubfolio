@@ -10,8 +10,7 @@
                  [hiccup "1.0.5"]
                  [ring "1.3.1"]
                  [ring/ring-defaults "0.1.2"]
-                 [com.taoensso/carmine "2.7.0"]]
+                 [com.taoensso/carmine "2.7.0" :exclusions [org.clojure/clojure]]
+                 [hiccup "1.0.5"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
                    :source-paths ["dev"]}})
-  ;;:plugins [[lein-ring "0.8.13"]]
-  ;;:ring {:handler hubfolio.server/new-server})

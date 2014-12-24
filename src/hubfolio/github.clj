@@ -1,5 +1,5 @@
 (ns hubfolio.github
   (:require [tentacles.repos :as repos]))
 
-(defn user-repos [auth]
-  (repos/user-repos "bruz" auth))
+(defn user-repos [auth user]
+  (repos/user-repos user (conj auth {:type "all" :all-pages true})))

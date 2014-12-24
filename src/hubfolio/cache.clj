@@ -2,12 +2,16 @@
   (:require [com.stuartsierra.component :as component]
             [taoensso.carmine :as car :refer [wcar]]))
 
+(def one-day (* 24 60 60))
+
 (defn get [config key]
-  (car/wcar config (car/get key)))
+  (let [namespaced-key (str "hubfolio:" key)]
+    (car/wcar config (car/get namespaced-key))))
 
 (defn set [config key value]
-  (car/wcar config (car/set key value))
-  value)
+  (let [namespaced-key (str "hubfolio:" key)]
+    (car/wcar config (car/setex namespaced-key one-day value))
+    value))
 
 (defmacro cache [config key & body]
   `(let [stored-value# (get ~config ~key)]
