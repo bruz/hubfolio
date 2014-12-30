@@ -17,4 +17,7 @@
   `(let [stored-value# (get ~config ~key)]
      (if stored-value#
        stored-value#
-       (set ~config ~key ~@body))))
+       (let [value# ~@body]
+         (if (nil? value#)
+           value#
+           (set ~config ~key value#))))))
