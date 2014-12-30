@@ -3,8 +3,16 @@
             [hubfolio.github :as github]
             [hubfolio.cache :refer [cache]]))
 
-(defn repos [username conn]
-  (github/user-repos conn username))
+(defn starshare [conn owner repo-name username]
+  (let [repo (github/user-repo conn owner repo-name)
+        stars (repo :stargazers_count)
+        contributors (github/repo-contributors conn owner repo-name)
+        user-commits ((contributors username) :total)
+        total-commits (reduce + (map #(% :total) (vals contributors)))]
+    (-> user-commits (/ total-commits) (* stars))))
+
+(defn repos [owner conn]
+  (github/user-repos conn owner))
 
 (defrecord Statistics [github-auth cache-config])
 
