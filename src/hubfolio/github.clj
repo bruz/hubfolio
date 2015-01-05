@@ -5,15 +5,13 @@
 (defn request [resource args]
   (loop [retries 10]
     (let [response (apply resource args)]
-      (println (str "retries = " retries))
       (cond
        (<= retries 0)
        nil
 
        (= response :tentacles.core/accepted)
        (do
-         (println (str "Response was " response))
-         (println "Waitin...")
+         (println "Waitin for github stats...")
          (Thread/sleep 1000)
          (recur (dec retries)))
 

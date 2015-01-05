@@ -27,11 +27,15 @@
        [:i.search.icon]]]]))
 
 (defn user [username stats-conn]
-  (let [repos (stats/repos username stats-conn)]
+  (let [repos (stats/repos stats-conn username)]
     (with-layout
-      [:ul
+      [:table
        (for [repo repos]
-         [:li (repo :name)])])))
+         (let [owner (get-in repo [:owner :login])
+               repo-name (repo :name)]
+           [:tr
+            [:td (repo :full_name)]
+            [:td (float (stats/starshare stats-conn owner repo-name username))]]))])))
 
 (defn create-routes [stats-conn]
   (routes

@@ -7,12 +7,35 @@
   (let [repo (github/user-repo conn owner repo-name)
         stars (repo :stargazers_count)
         contributors (github/repo-contributors conn owner repo-name)
-        user-commits ((contributors username) :total)
-        total-commits (reduce + (map #(% :total) (vals contributors)))]
-    (-> user-commits (/ total-commits) (* stars))))
+        user-contributions (contributors username)
+        user-commits (if user-contributions (user-contributions :total) 0)
+        total-commits (if (empty? contributors)
+                        0
+                        (reduce + (map #(% :total) (vals contributors))))]
+    (if (= 0 total-commits)
+      0
+      (-> user-commits (/ total-commits) (* stars)))))
 
-(defn repos [owner conn]
-  (github/user-repos conn owner))
+(defn source-repo [conn fork-lite username]
+  (if (fork-lite :fork)
+    (let [fork-owner (get-in fork-lite [:owner :login])
+          fork-name (fork-lite :name)
+          fork-full (github/user-repo conn fork-owner fork-name)
+          source (fork-full :source)
+          owner (get-in source [:owner :login])
+          repo-name (source :name)
+          contributors (github/repo-contributors conn owner repo-name)]
+      (if (contributors username)
+        source
+        nil))
+    nil))
+
+(defn repos [conn username]
+  (let [owned-repos (github/user-repos conn username)
+        source-repos (map #(source-repo conn % username) owned-repos)]
+    (->> owned-repos
+         (concat source-repos)
+         (remove nil?))))
 
 (defrecord Statistics [github-auth cache-config])
 
