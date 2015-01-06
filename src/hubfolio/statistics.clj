@@ -7,15 +7,14 @@
   (let [repo (github/user-repo conn owner repo-name)
         stars (repo :stargazers_count)
         contributors (github/repo-contributors conn owner repo-name)
-        user-contributions (contributors username)
-        user-commits (if user-contributions (user-contributions :total) 0)
-        total-commits (reduce + (map #(% :total) (vals contributors)))]
-    (if (= 0 total-commits)
+        user-commits (get-in contributors [username :total] 0)
+        total-commits (reduce + (map :total (vals contributors)))]
+    (if (zero? total-commits)
       0
       (-> user-commits (/ total-commits) (* stars)))))
 
 (defn source-repo [conn fork-lite username]
-  (if (fork-lite :fork)
+  (when (fork-lite :fork)
     (let [fork-owner (get-in fork-lite [:owner :login])
           fork-name (fork-lite :name)
           fork-full (github/user-repo conn fork-owner fork-name)
@@ -23,10 +22,8 @@
           owner (get-in source [:owner :login])
           repo-name (source :name)
           contributors (github/repo-contributors conn owner repo-name)]
-      (if (contributors username)
-        source
-        nil))
-    nil))
+      (when (contributors username)
+        source))))
 
 (defn repos [conn username]
   (let [owned-repos (github/user-repos conn username)
