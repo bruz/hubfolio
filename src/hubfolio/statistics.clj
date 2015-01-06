@@ -9,9 +9,7 @@
         contributors (github/repo-contributors conn owner repo-name)
         user-contributions (contributors username)
         user-commits (if user-contributions (user-contributions :total) 0)
-        total-commits (if (empty? contributors)
-                        0
-                        (reduce + (map #(% :total) (vals contributors))))]
+        total-commits (reduce + (map #(% :total) (vals contributors)))]
     (if (= 0 total-commits)
       0
       (-> user-commits (/ total-commits) (* stars)))))
