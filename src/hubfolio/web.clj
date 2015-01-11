@@ -26,16 +26,30 @@
                        :placeholder "GitHub username"}]
        [:i.search.icon]]]]))
 
+(defn format-imprecise [number]
+  (format "%.1f" (float number)))
+
 (defn user [username stats-conn]
   (let [repos (stats/repos stats-conn username)]
     (with-layout
       [:table
-       (for [repo repos]
-         (let [owner (get-in repo [:owner :login])
-               repo-name (repo :name)]
-           [:tr
-            [:td (repo :full_name)]
-            [:td (float (stats/starshare stats-conn owner repo-name username))]]))])))
+       [:thead
+        [:tr
+         [:th "Name"]
+         [:th "Starshare"]
+         [:th "User Commits"]
+         [:th "Total Commits"]
+         [:th "Stale years"]
+         [:th "Score"]]]
+       [:tbody
+        (for [repo repos]
+          [:tr
+           [:td (repo :full_name)]
+           [:td (format-imprecise (repo :starshare))]
+           [:td (repo :user-commits)]
+           [:td (repo :total-commits)]
+           [:td (repo :stale-years)]
+           [:td (format-imprecise (repo :score))]])]])))
 
 (defn create-routes [stats-conn]
   (routes

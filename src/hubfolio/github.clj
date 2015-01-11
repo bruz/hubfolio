@@ -29,13 +29,15 @@
         options (conj github-auth {:type "all" :all-pages true})]
     (cached repos/user-repos cache-config key options owner)))
 
-(defn user-repo [conn owner repo]
+(defn user-repo [conn owner repo-name]
   (let [{:keys [cache-config github-auth]} conn
-        key (str "repo:" owner ":" repo)]
-    (cached repos/specific-repo cache-config key github-auth owner repo)))
+        key (str "repo:" owner ":" repo-name)]
+    (cached repos/specific-repo cache-config key github-auth owner repo-name)))
 
-(defn repo-contributors [conn owner repo]
+(defn repo-contributors [conn repo]
   (let [{:keys [cache-config github-auth]} conn
-        key (str "repo:" owner ":" repo ":stats:contributors")
-        users (cached repos/contributor-statistics cache-config key github-auth owner repo)]
+        repo-name (repo :name)
+        owner (get-in repo [:owner :login])
+        key (str "repo:" owner ":" repo-name ":stats:contributors")
+        users (cached repos/contributor-statistics cache-config key github-auth owner repo-name)]
     (zipmap (map #(get-in % [:author :login]) users) users)))

@@ -11,6 +11,8 @@
                  [ring "1.3.1"]
                  [ring/ring-defaults "0.1.2"]
                  [com.taoensso/carmine "2.7.0" :exclusions [org.clojure/clojure]]
-                 [hiccup "1.0.5"]]
+                 [hiccup "1.0.5"]
+                 [clj-time "0.6.0"]
+                 [org.clojure/math.numeric-tower "0.0.4"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
                    :source-paths ["dev"]}})

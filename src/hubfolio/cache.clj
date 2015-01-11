@@ -3,6 +3,7 @@
             [taoensso.carmine :as car :refer [wcar]]))
 
 (def one-day (* 24 60 60))
+(def one-week (* 7 24 60 60))
 
 (defn get [config key]
   (let [namespaced-key (str "hubfolio:" key)]
