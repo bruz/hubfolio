@@ -69,7 +69,22 @@
          (sort-by :score)
          reverse)))
 
-(defrecord Statistics [github-auth cache-config])
+(defn user [conn username]
+  (github/user conn username))
+
+(defrecord Statistics [github-auth cache-config]
+  component/Lifecycle
+
+  (start [component]
+         (let [in-memory-cache (atom {})]
+           (assoc component
+             :github-auth github-auth
+             :cache-config (assoc cache-config :in-memory-cache in-memory-cache))))
+  (stop [component]
+        ;; no-op
+        (assoc component
+          :github-auth nil
+          :cache-config nil)))
 
 (defn new-statistics [github-auth cache-config]
   (map->Statistics {:github-auth github-auth :cache-config cache-config}))
