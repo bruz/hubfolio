@@ -11,10 +11,10 @@
    [:head
     [:link {:href "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.css" :rel "stylesheet"}]
     [:script {:src "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"}]
-    [:script {:src "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.js"}]]
+    [:script {:src "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.js"}]
+    [:link {:href "/hubfolio.css" :rel "stylesheet"}]]
    [:body
-    [:div.ui.center.aligned.segment
-     [:h1 "Hubfolio"] content]]))
+    content]))
 
 (defn home []
   (with-layout
@@ -30,33 +30,68 @@
   (format "%.1f" (float number)))
 
 (defn user [username stats-conn]
-  (let [repos (stats/repos stats-conn username)]
+  (let [user (stats/user stats-conn username)
+        repos (stats/repos stats-conn username)]
     (with-layout
-      [:table
-       [:thead
-        [:tr
-         [:th "Name"]
-         [:th "Starshare"]
-         [:th "User Commits"]
-         [:th "Total Commits"]
-         [:th "Stale years"]
-         [:th "Score"]]]
-       [:tbody
-        (for [repo repos]
-          [:tr
-           [:td (repo :full_name)]
-           [:td (format-imprecise (repo :starshare))]
-           [:td (repo :user-commits)]
-           [:td (repo :total-commits)]
-           [:td (repo :stale-years)]
-           [:td (format-imprecise (repo :score))]])]])))
+      [:div
+       [:div.ui.segment
+        [:div.ui.stackable.very.relaxed.two.column.page.grid
+         [:div.row
+          [:div.centered.eight.wide.left.aligned.column
+           [:div.ui.divided.items
+            [:div.link.item
+             [:div.ui.small.image
+              [:img.ui.rounded.image {:src (user :avatar_url)}]]
+             [:div.middle.aligned.content
+              [:div.header (str (user :name) " (" (user :login) ")")]
+              [:div.description (user :location)]]]]]]]]
+       [:div.ui.left.aligned.vertical.segment
+        [:div.ui.page.grid
+         [:div.row
+          [:div.column
+        [:div.ui.cards
+         (for [repo repos]
+          [:div.ui.card
+           [:div.content
+            [:div.right.floated
+             [:div.ui.top.right.attached.green.label "Score"
+              [:div.detail (format-imprecise (repo :score))]]]
+            [:a.header {:href (repo :html_url)}
+             (when-not (= username (get-in repo [:owner :login]))
+               [:i.fork.icon])
+             (repo :name)]
+            [:div.description (repo :description)]]
+           [:div.extra.content
+            [:div.ui.padded.grid
+             [:div.two.column.row
+            [:div.ui.label "Starshare"
+             [:div.detail
+              [:i.star.icon]
+              (format-imprecise (repo :starshare))]]
+            [:div.right.floated
+             [:div.ui.label "User commits"
+              [:div.detail
+               [:i.user.icon]
+               (repo :user-commits)]]]]
+             [:div.two.column.row
+            [:div.ui.label "Years stale"
+             [:div.detail
+              [:i.wait.icon]
+              (repo :stale-years)]]
+            [:div.right.floated
+             [:div.ui.label "Total commits"
+              [:div.detail
+               [:i.users.icon]
+               (repo :total-commits)]]]
+            ]]]])]]]]]])))
 
 (defn create-routes [stats-conn]
   (routes
     (GET "/" [username]
          (if username (str username)
            (home)))
-    (GET "/user/:username" [username] (user username stats-conn))))
+    (GET "/user/:username" [username] (user username stats-conn))
+    (route/files "/" {:root "public"})))
 
 (defrecord WebHandler [stats-conn]
   component/Lifecycle

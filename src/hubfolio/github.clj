@@ -1,5 +1,6 @@
 (ns hubfolio.github
   (:require [tentacles.repos :as repos]
+            [tentacles.users :as users]
             [hubfolio.cache :refer [cache]]))
 
 (defn request [resource args]
@@ -22,6 +23,11 @@
   (let [args (concat xs [options])]
     (cache cache-config key
            (request resource args))))
+
+(defn user [conn username]
+  (let [{:keys [cache-config github-auth]} conn
+        key (str "user:" username)]
+    (cached users/user cache-config key username github-auth)))
 
 (defn user-repos [conn owner]
   (let [{:keys [cache-config github-auth]} conn

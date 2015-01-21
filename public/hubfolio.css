@@ -1,0 +1,14 @@
+.card {
+  height: 17em;
+}
+
+.card .header {
+  width: 185px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  max-height: 4em;
+}
