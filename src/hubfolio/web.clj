@@ -54,7 +54,7 @@
           [:div.ui.card
            [:div.content
             [:div.right.floated
-             [:div.ui.top.right.attached.green.label "Score"
+             [:div.ui.top.right.attached.green.label {:data-content "Combination of starshare, user commits and years stale into a single metric"} "Score"
               [:div.detail (format-imprecise (repo :score))]]]
             [:a.header {:href (repo :html_url)}
              (when-not (= username (get-in repo [:owner :login]))
@@ -64,26 +64,26 @@
            [:div.extra.content
             [:div.ui.padded.grid
              [:div.two.column.row
-            [:div.ui.label "Starshare"
+            [:div.ui.label {:data-content (str "Number of stars " username " gets credit for on this repo. Determined by applying the percentage of commits the user has contributed to the total number of stars.")} "Starshare"
              [:div.detail
               [:i.star.icon]
               (format-imprecise (repo :starshare))]]
             [:div.right.floated
-             [:div.ui.label "User commits"
+             [:div.ui.label {:data-content (str "Commits by " username " to this repo")} "User commits"
               [:div.detail
                [:i.user.icon]
                (repo :user-commits)]]]]
              [:div.two.column.row
-            [:div.ui.label "Years stale"
+            [:div.ui.label {:data-content "Number of years since the last commit by anyone to this repo"} "Years stale"
              [:div.detail
               [:i.wait.icon]
               (repo :stale-years)]]
             [:div.right.floated
-             [:div.ui.label "Total commits"
+             [:div.ui.label {:data-content "Total commits by all users to this repo"} "Total commits"
               [:div.detail
                [:i.users.icon]
-               (repo :total-commits)]]]
-            ]]]])]]]]]])))
+               (repo :total-commits)]]]]]]])]]]]]
+      [:script "$('.ui.label').popup();"]])))
 
 (defn create-routes [stats-conn]
   (routes
