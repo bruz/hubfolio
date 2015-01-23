@@ -51,6 +51,13 @@
       (when (contributors username)
         source))))
 
+(defn source-or-fork [conn repo username]
+  (if-let [source (source-repo conn repo username)]
+    (if (> (repo :stargazers_count) (source :stargazers_count))
+      repo
+      source)
+    repo))
+
 (defn extend-repo-stats [conn repo username]
   (assoc repo
     :starshare (starshare conn repo username)
@@ -59,15 +66,21 @@
     :stale-years (stale-years conn repo)
     :score (score conn repo username)))
 
+(defn org-repos [conn username]
+  (let [user-orgs (github/user-orgs conn username)]
+    (->> user-orgs
+         (map #(github/org-repos conn (% :login)))
+         flatten)))
+
 (defn repos [conn username]
-  (let [owned-repos (github/user-repos conn username)
-        source-repos (map #(source-repo conn % username) owned-repos)]
-    (->> owned-repos
-         (concat source-repos)
-         (remove nil?)
-         (map #(extend-repo-stats conn % username))
-         (sort-by :score)
-         reverse)))
+  (->> (github/user-repos conn username)
+       (concat (org-repos conn username))
+       (remove nil?)
+       (map #(source-or-fork conn % username))
+       (map #(extend-repo-stats conn % username))
+       (filter #(not (zero? (% :user-commits))))
+       (sort-by :score)
+       reverse))
 
 (defn user [conn username]
   (github/user conn username))

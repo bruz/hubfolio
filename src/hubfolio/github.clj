@@ -1,6 +1,7 @@
 (ns hubfolio.github
   (:require [tentacles.repos :as repos]
             [tentacles.users :as users]
+            [tentacles.orgs :as orgs]
             [hubfolio.cache :refer [cache]]))
 
 (defn request [resource args]
@@ -39,6 +40,17 @@
   (let [{:keys [cache-config github-auth]} conn
         key (str "repo:" owner ":" repo-name)]
     (cached repos/specific-repo cache-config key github-auth owner repo-name)))
+
+(defn user-orgs [conn user]
+  (let [{:keys [cache-config github-auth]} conn
+        key (str "user-orgs:" user)]
+    (cached orgs/user-orgs cache-config key github-auth user)))
+
+(defn org-repos [conn org]
+  (let [{:keys [cache-config github-auth]} conn
+        key (str "org-repos:" org)
+        options (conj github-auth {:type "all" :all-pages true})]
+    (cached repos/org-repos cache-config key options org)))
 
 (defn repo-contributors [conn repo]
   (let [{:keys [cache-config github-auth]} conn
