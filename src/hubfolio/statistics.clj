@@ -55,7 +55,7 @@
   (if-let [source (source-repo conn repo username)]
     (if (> (repo :stargazers_count) (source :stargazers_count))
       repo
-      source)
+      (assoc source :fork true))
     repo))
 
 (defn extend-repo-stats [conn repo username]
@@ -70,7 +70,8 @@
   (let [user-orgs (github/user-orgs conn username)]
     (->> user-orgs
          (map #(github/org-repos conn (% :login)))
-         flatten)))
+         flatten
+         (map #(assoc % :org-repo true)))))
 
 (defn repos [conn username]
   (->> (github/user-repos conn username)

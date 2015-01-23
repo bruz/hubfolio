@@ -57,8 +57,9 @@
              [:div.ui.top.right.attached.green.label {:data-content "Combination of starshare, user commits and years stale into a single metric"} "Score"
               [:div.detail (format-imprecise (repo :score))]]]
             [:a.header {:href (repo :html_url)}
-             (when-not (= username (get-in repo [:owner :login]))
-               [:i.fork.icon])
+             (cond
+              (repo :fork) [:i.fork.icon]
+              (repo :org-repo) [:i.users.icon])
              (repo :name)]
             [:div.description (repo :description)]]
            [:div.extra.content
