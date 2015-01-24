@@ -10,6 +10,7 @@
                  [hiccup "1.0.5"]
                  [ring "1.3.1"]
                  [ring/ring-defaults "0.1.2"]
+                 [ring/ring-anti-forgery "1.0.0"]
                  [com.taoensso/carmine "2.7.0" :exclusions [org.clojure/clojure]]
                  [hiccup "1.0.5"]
                  [clj-time "0.6.0"]

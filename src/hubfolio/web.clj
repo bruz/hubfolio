@@ -1,7 +1,9 @@
 (ns hubfolio.web
-  (:require [compojure.core :refer [routes GET]]
+  (:require [compojure.core :refer [routes GET POST]]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.util.response :refer [redirect]]
+            [ring.util.anti-forgery :refer [anti-forgery-field]]
             [com.stuartsierra.component :as component]
             [hubfolio.statistics :as stats]
             [hiccup.core :refer [html]]))
@@ -18,13 +20,20 @@
 
 (defn home []
   (with-layout
-    [:div.ui.search
-     [:form {:action "" :method "get"}
-      [:div.ui.icon.input
-       [:input.prompt {:type "text"
-                       :name "username"
-                       :placeholder "GitHub username"}]
-       [:i.search.icon]]]]))
+    [:div
+     [:div.ui.segment
+      [:div.ui.center.aligned.stackable.very.relaxed.page.grid
+       [:div.row
+        [:div.fourteen.wide.column
+         [:h1.ui.header "Hubfolio"]
+         [:div.ui.search
+          [:form {:action "/" :method "post"}
+           (anti-forgery-field)
+           [:div.ui.icon.input
+            [:input.prompt {:type "text"
+                            :name "username"
+                            :placeholder "GitHub username"}]
+            [:i.search.icon]]]]]]]]]))
 
 (defn format-imprecise [number]
   (format "%.1f" (float number)))
@@ -88,11 +97,10 @@
 
 (defn create-routes [stats-conn]
   (routes
-    (GET "/" [username]
-         (if username (str username)
-           (home)))
-    (GET "/user/:username" [username] (user username stats-conn))
-    (route/files "/" {:root "public"})))
+    (GET "/" [] (home))
+    (POST "/" [username] (redirect (str "/" username)))
+    (route/files "/" {:root "public"})
+    (GET "/:username" [username] (user username stats-conn))))
 
 (defrecord WebHandler [stats-conn]
   component/Lifecycle
