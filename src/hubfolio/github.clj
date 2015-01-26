@@ -28,7 +28,7 @@
 (defn user [conn username]
   (let [{:keys [cache-config github-auth]} conn
         key (str "user:" username)]
-    (cached users/user cache-config key username github-auth)))
+    (cached users/user cache-config key github-auth username)))
 
 (defn user-repos [conn owner]
   (let [{:keys [cache-config github-auth]} conn
