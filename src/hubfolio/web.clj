@@ -98,8 +98,8 @@
 (defn create-routes [stats-conn]
   (routes
     (GET "/" [] (home))
-    (POST "/" [username] (redirect (str "/" username)))
     (route/files "/" {:root "public"})
+    (POST "/" [username] (redirect (str "/" username)))
     (GET "/:username" [username] (user username stats-conn))))
 
 (defrecord WebHandler [stats-conn]
