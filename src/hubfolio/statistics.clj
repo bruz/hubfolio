@@ -69,7 +69,7 @@
 (defn org-repos [conn username]
   (let [user-orgs (github/user-orgs conn username)]
     (->> user-orgs
-         (map #(github/org-repos conn (% :login)))
+         (pmap #(github/org-repos conn (% :login)))
          flatten
          (map #(assoc % :org-repo true)))))
 
@@ -77,8 +77,8 @@
   (->> (github/user-repos conn username)
        (concat (org-repos conn username))
        (remove nil?)
-       (map #(source-or-fork conn % username))
-       (map #(extend-repo-stats conn % username))
+       (pmap #(source-or-fork conn % username))
+       (pmap #(extend-repo-stats conn % username))
        (filter #(not (zero? (% :user-commits))))
        (sort-by :score)
        reverse))
