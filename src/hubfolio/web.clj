@@ -6,6 +6,7 @@
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [com.stuartsierra.component :as component]
             [hubfolio.statistics :as stats]
+            [hubfolio.user-status :as user-status]
             [hiccup.core :refer [html]]))
 
 (defn with-layout [content]
@@ -38,7 +39,11 @@
 (defn format-imprecise [number]
   (format "%.1f" (float number)))
 
-(defn user [username stats-conn]
+(defn not-opted-in [username] (str username " not-opted-in"))
+
+(defn generating [username] (str username " generating"))
+
+(defn generated [username stats-conn]
   (let [user (stats/user stats-conn username)
         repos (stats/repos stats-conn username)]
     (with-layout
@@ -95,22 +100,36 @@
                (repo :total-commits)]]]]]]])]]]]]
       [:script "$('.ui.label').popup();"]])))
 
-(defn create-routes [stats-conn]
+(defn user [username stats-conn generator github-auth store-config]
+  (let [status (user-status/get generator github-auth store-config username)]
+    (case
+      status
+      :not-opted-in (not-opted-in username)
+      :generating (generating username)
+      :generated (generated username stats-conn))))
+
+(defn create-routes [stats-conn generator github-auth store-config]
   (routes
     (GET "/" [] (home))
     (route/files "/" {:root "public"})
     (POST "/" [username] (redirect (str "/" username)))
-    (GET "/:username" [username] (user username stats-conn))))
+    (GET "/:username" [username] (user username stats-conn generator github-auth store-config))))
 
-(defrecord WebHandler [stats-conn]
+(defrecord WebHandler [stats-conn generator github-auth store-config]
   component/Lifecycle
 
   (start [component]
-    (let [handler (wrap-defaults (create-routes stats-conn) site-defaults)]
-      (assoc component :handler handler)))
+    (let [handler (wrap-defaults (create-routes stats-conn generator github-auth store-config) site-defaults)]
+      (assoc component
+        :handler handler
+        :github-auth github-auth
+        :store-config store-config)))
   (stop [component]
     ;; no-op
-    (assoc component :handler nil)))
+    (assoc component
+      :handler nil
+      :github-auth nil
+      :store-config nil)))
 
-(defn new-web-handler []
-  (map->WebHandler {}))
+(defn new-web-handler [github-auth store-config]
+  (map->WebHandler {:github-auth github-auth :store-config store-config}))

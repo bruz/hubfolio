@@ -90,12 +90,12 @@
   component/Lifecycle
 
   (start [component]
-         (let [in-memory-cache (atom {})]
+         (let [in-memory-cache (atom {})
+               cache-config (assoc cache-config :in-memory-cache in-memory-cache)]
            (assoc component
              :github-auth github-auth
-             :cache-config (assoc cache-config :in-memory-cache in-memory-cache))))
+             :cache-config cache-config)))
   (stop [component]
-        ;; no-op
         (assoc component
           :github-auth nil
           :cache-config nil)))

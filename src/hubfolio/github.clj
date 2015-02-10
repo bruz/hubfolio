@@ -59,3 +59,8 @@
         key (str "repo:" owner ":" repo-name ":stats:contributors")
         users (cached repos/contributor-statistics cache-config key github-auth owner repo-name)]
     (zipmap (map #(get-in % [:author :login]) users) users)))
+
+(defn repo-stargazers [conn owner repo-name]
+  (let [{:keys [github-auth]} conn
+        options (conj github-auth {:all-pages true})]
+    (repos/stargazers owner repo-name github-auth)))
