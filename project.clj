@@ -17,4 +17,5 @@
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
-                   :source-paths ["dev"]}})
+                   :source-paths ["dev"]}}
+  :main hubfolio.core)

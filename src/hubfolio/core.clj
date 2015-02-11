@@ -15,3 +15,20 @@
         {:generator {:stats-conn :statistics}
          :web {:stats-conn :statistics :generator :generator}
          :server {:web-handler :web}})))
+
+(defn port []
+  (or (read-string (System/getenv "PORT"))
+      5000))
+
+(defn redis-url []
+  (or (System/getenv "REDIS_URL")
+      "redis://localhost:6379"))
+
+(defn -main [& args]
+  (component/start
+   (system {:web
+            {:port (port)}
+            :storage
+            {:uri (redis-url)}
+            :github
+            {:oauth-token "27e5dcc01e01e5609213a780d10487259667318b"}})))
