@@ -33,7 +33,7 @@
 (defn user-repos [conn owner]
   (let [{:keys [cache-config github-auth]} conn
         key (str "repos:" owner)
-        options (conj github-auth {:type "all" :all-pages true})]
+        options (conj github-auth {:type "public" :all-pages true})]
     (cached repos/user-repos cache-config key options owner)))
 
 (defn user-repo [conn owner repo-name]
