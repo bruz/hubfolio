@@ -51,12 +51,10 @@
       (when (contributors username)
         source))))
 
-(defn source-or-fork [conn repo username]
+(defn with-source [conn repo username]
   (if-let [source (source-repo conn repo username)]
-    (if (> (repo :stargazers_count) (source :stargazers_count))
-      repo
-      (assoc source :fork true))
-    repo))
+    [repo (assoc source :fork true)]
+    [repo]))
 
 (defn extend-repo-stats [conn repo username]
   (assoc repo
@@ -73,11 +71,19 @@
          flatten
          (map #(assoc % :org-repo true)))))
 
+(defn highest-stars-per-repo [all-repos]
+  (->> all-repos
+       (group-by :name)
+       (vals)
+       (map #(last (sort-by :stargazers_count %)))))
+
 (defn repos [conn username]
   (->> (github/user-repos conn username)
        (concat (org-repos conn username))
        (remove nil?)
-       (pmap #(source-or-fork conn % username))
+       (pmap #(with-source conn % username))
+       (flatten)
+       (highest-stars-per-repo)
        (pmap #(extend-repo-stats conn % username))
        (filter #(not (zero? (% :user-commits))))
        (sort-by :score)
