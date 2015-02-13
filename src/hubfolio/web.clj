@@ -15,7 +15,8 @@
     [:link {:href "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.css" :rel "stylesheet"}]
     [:script {:src "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"}]
     [:script {:src "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.js"}]
-    [:link {:href "/hubfolio.css" :rel "stylesheet"}]]
+    [:link {:href "/hubfolio.css" :rel "stylesheet"}]
+    [:script {:src "/hubfolio.js"}]]
    [:body
     content]))
 
@@ -41,7 +42,18 @@
 
 (defn not-opted-in [username] (str username " not-opted-in"))
 
-(defn generating [username] (str username " generating"))
+(defn generating [username]
+  (with-layout
+    [:div
+     [:div.ui.segment
+      [:div.ui.active.inverted.dimmer
+       [:div.ui.indeterminate.text.active.loader "Generating... this may take a while"]]
+      [:br]
+      [:br]
+      [:br]
+      [:br]
+      [:br]]
+     [:script "$(document).ready(function(){ checkStatus(); });"]]))
 
 (defn generated [username stats-conn]
   (let [user (stats/user stats-conn username)
@@ -97,8 +109,7 @@
              [:div.ui.small.label {:data-content "Total commits by all users to this repo"} "Total commits"
               [:div.detail
                [:i.users.icon]
-               (repo :total-commits)]]]]]]])]]]]]
-      [:script "$('.ui.label').popup();"]])))
+               (repo :total-commits)]]]]]]])]]]]]])))
 
 (defn user [username stats-conn generator github-auth store-config]
   (let [status (user-status/get generator github-auth store-config username)]
@@ -113,7 +124,8 @@
     (GET "/" [] (home))
     (route/files "/" {:root "public"})
     (POST "/" [username] (redirect (str "/" username)))
-    (GET "/:username" [username] (user username stats-conn generator github-auth store-config))))
+    (GET "/:username" [username] (user username stats-conn generator github-auth store-config))
+    (GET "/:username/status" [username] (name (user-status/get generator github-auth store-config username)))))
 
 (defrecord WebHandler [stats-conn generator github-auth store-config]
   component/Lifecycle
