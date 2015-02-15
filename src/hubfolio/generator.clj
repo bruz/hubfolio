@@ -16,7 +16,7 @@
                (println (str "Generating stats: " username ", " conn))
                (stats/user conn username)
                (stats/repos conn username)
-               (user-status/set store-config username (timestamp))))
+               (user-status/set-last-updated store-config username (timestamp))))
     generator-chan))
 
 (defrecord Generator [stats-conn store-config]

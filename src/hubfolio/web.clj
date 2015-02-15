@@ -112,7 +112,7 @@
                (repo :total-commits)]]]]]]])]]]]]])))
 
 (defn user [username stats-conn generator github-auth store-config]
-  (let [status (user-status/get generator github-auth store-config username)]
+  (let [status (user-status/get-status generator github-auth store-config username)]
     (case
       status
       :not-opted-in (not-opted-in username)
@@ -125,7 +125,7 @@
     (route/files "/" {:root "public"})
     (POST "/" [username] (redirect (str "/" username)))
     (GET "/:username" [username] (user username stats-conn generator github-auth store-config))
-    (GET "/:username/status" [username] (name (user-status/get generator github-auth store-config username)))))
+    (GET "/:username/status" [username] (name (user-status/get-status generator github-auth store-config username)))))
 
 (defrecord WebHandler [stats-conn generator github-auth store-config]
   component/Lifecycle

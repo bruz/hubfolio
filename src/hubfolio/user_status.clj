@@ -14,17 +14,23 @@
         :generating)
       :not-opted-in)))
 
-(defn set [store-config username last-updated]
+(defn set-last-updated [store-config username last-updated]
   (car/wcar store-config (car/hset hash-name username last-updated))
   last-updated)
 
-(defn get [generator github-auth store-config username]
+(defn get-last-updated [generator github-auth store-config username]
   (let [last-updated (->> (car/hget hash-name username)
                           (car/wcar store-config)
                           (keyword))]
     (->> (case (or last-updated :not-opted-in)
            :generating :generating
            :not-opted-in (check-starred generator github-auth store-config username)
-           nil (check-starred generator github-auth store-config username)
-           :generated)
-         (set store-config username))))
+           last-updated)
+         (set-last-updated store-config username))))
+
+
+(defn get-status [generator github-auth store-config username]
+  (let [last-updated (get-last-updated generator github-auth store-config username)]
+    (if (some #{last-updated} [:generating :not-opted-in])
+      last-updated
+      :generated)))
