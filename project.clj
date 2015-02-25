@@ -19,4 +19,5 @@
                  [schejulure "1.0.1"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
                    :source-paths ["dev"]}}
-  :main hubfolio.core)
+  :main hubfolio.core
+  :uberjar-name "hubfolio.jar")
