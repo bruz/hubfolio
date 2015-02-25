@@ -20,4 +20,5 @@
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
                    :source-paths ["dev"]}}
   :main hubfolio.core
+  :min-lein-version "2.0.0"
   :uberjar-name "hubfolio.jar")
