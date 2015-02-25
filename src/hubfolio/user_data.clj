@@ -6,7 +6,7 @@
     (car/wcar config (car/set namespaced-key value))
     value))
 
-(defn load [config username]
+(defn retrieve [config username]
   (let [namespaced-key (str "hubfolio:profile:" username)]
     (let [value (car/wcar config (car/get namespaced-key))]
       value)))

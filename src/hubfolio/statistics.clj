@@ -1,7 +1,6 @@
 (ns hubfolio.statistics
   (:require [com.stuartsierra.component :as component]
             [hubfolio.github :as github]
-            [hubfolio.cache :refer [cache]]
             [clj-time.coerce :as time-coerce]
             [clj-time.core :as time-core]
             [clojure.math.numeric-tower :as math]))

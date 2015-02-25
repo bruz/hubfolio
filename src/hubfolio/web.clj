@@ -57,7 +57,7 @@
      [:script "$(document).ready(function(){ checkStatus(); });"]]))
 
 (defn generated [username store-config]
-  (let [{:keys [user repos]} (user-data/load store-config username)]
+  (let [{:keys [user repos]} (user-data/retrieve store-config username)]
     (with-layout
       [:div
        [:div.ui.segment

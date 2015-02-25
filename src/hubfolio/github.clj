@@ -2,8 +2,7 @@
   (:require [tentacles.core :as core]
             [tentacles.orgs :as orgs]
             [tentacles.repos :as repos]
-            [tentacles.users :as users]
-            [hubfolio.cache :refer [cache delete]]))
+            [tentacles.users :as users]))
 
 (defn request [resource & args]
   (loop [retries 10]

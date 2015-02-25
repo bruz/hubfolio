@@ -3,7 +3,8 @@
             [hubfolio.statistics :refer [new-statistics]]
             [hubfolio.generator :refer [new-generator]]
             [hubfolio.server :refer [new-web-server]]
-            [hubfolio.web :refer [new-web-handler]]))
+            [hubfolio.web :refer [new-web-handler]])
+  (:gen-class))
 
 (defn system [config]
   (-> (component/system-map
