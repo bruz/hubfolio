@@ -17,7 +17,8 @@
          :server {:web-handler :web}})))
 
 (defn port []
-  (or (read-string (System/getenv "PORT"))
+  (or (if-let [port-string (System/getenv "PORT")]
+        (read-string port-string))
       5000))
 
 (defn redis-url []
