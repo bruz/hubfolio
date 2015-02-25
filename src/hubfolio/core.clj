@@ -7,7 +7,7 @@
 
 (defn system [config]
   (-> (component/system-map
-       :statistics (new-statistics (:github config) (:storage config))
+       :statistics (new-statistics (:github config))
        :generator (new-generator (:storage config))
        :web (new-web-handler (:github config) (:storage config))
        :server (new-web-server (-> config :web :port)))

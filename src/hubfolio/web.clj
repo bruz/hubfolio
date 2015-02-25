@@ -7,6 +7,7 @@
             [com.stuartsierra.component :as component]
             [hubfolio.statistics :as stats]
             [hubfolio.user-status :as user-status]
+            [hubfolio.user-data :as user-data]
             [hiccup.core :refer [html]]))
 
 (defn with-layout [content]
@@ -55,9 +56,8 @@
       [:br]]
      [:script "$(document).ready(function(){ checkStatus(); });"]]))
 
-(defn generated [username stats-conn]
-  (let [user (stats/user stats-conn username)
-        repos (stats/repos stats-conn username)]
+(defn generated [username store-config]
+  (let [{:keys [user repos]} (user-data/load store-config username)]
     (with-layout
       [:div
        [:div.ui.segment
@@ -117,7 +117,7 @@
       status
       :not-opted-in (not-opted-in username)
       :generating (generating username)
-      :generated (generated username stats-conn))))
+      :generated (generated username store-config))))
 
 (defn create-routes [stats-conn generator github-auth store-config]
   (routes

@@ -22,6 +22,11 @@
        (set-memory config key value)
        value))))
 
+(defn delete [config key]
+  (let [namespaced-key (str "hubfolio:" key)]
+    (set-memory config key nil)
+    (car/wcar config (car/del namespaced-key))))
+
 (defmacro cache [config key & body]
   `(let [stored-value# (get ~config ~key)]
      (if stored-value#

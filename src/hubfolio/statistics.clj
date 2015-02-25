@@ -96,15 +96,11 @@
   component/Lifecycle
 
   (start [component]
-         (let [in-memory-cache (atom {})
-               cache-config (assoc cache-config :in-memory-cache in-memory-cache)]
            (assoc component
-             :github-auth github-auth
-             :cache-config cache-config)))
+             :github-auth github-auth))
   (stop [component]
         (assoc component
-          :github-auth nil
-          :cache-config nil)))
+          :github-auth nil)))
 
-(defn new-statistics [github-auth cache-config]
-  (map->Statistics {:github-auth github-auth :cache-config cache-config}))
+(defn new-statistics [github-auth]
+  (map->Statistics {:github-auth github-auth}))

@@ -18,6 +18,11 @@
   (car/wcar store-config (car/hset hash-name username last-updated))
   last-updated)
 
+(defn all-last-updated [store-config]
+  (->> (car/hgetall hash-name)
+       (car/wcar store-config)
+       (partition 2)))
+
 (defn get-last-updated [generator github-auth store-config username]
   (let [last-updated (->> (car/hget hash-name username)
                           (car/wcar store-config)
@@ -27,7 +32,6 @@
            :not-opted-in (check-starred generator github-auth store-config username)
            last-updated)
          (set-last-updated store-config username))))
-
 
 (defn get-status [generator github-auth store-config username]
   (let [last-updated (get-last-updated generator github-auth store-config username)]

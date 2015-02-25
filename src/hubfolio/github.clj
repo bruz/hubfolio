@@ -1,10 +1,11 @@
 (ns hubfolio.github
-  (:require [tentacles.repos :as repos]
-            [tentacles.users :as users]
+  (:require [tentacles.core :as core]
             [tentacles.orgs :as orgs]
-            [hubfolio.cache :refer [cache]]))
+            [tentacles.repos :as repos]
+            [tentacles.users :as users]
+            [hubfolio.cache :refer [cache delete]]))
 
-(defn request [resource args]
+(defn request [resource & args]
   (loop [retries 10]
     (let [response (apply resource args)]
       (cond
@@ -20,47 +21,46 @@
        :else
        response))))
 
-(defn cached [resource cache-config key options & xs]
-  (let [args (concat xs [options])]
-    (cache cache-config key
-           (request resource args))))
-
 (defn user [conn username]
-  (let [{:keys [cache-config github-auth]} conn
+  (let [{:keys [github-auth]} conn
         key (str "user:" username)]
-    (cached users/user cache-config key github-auth username)))
+    (request users/user username github-auth)))
 
 (defn user-repos [conn owner]
-  (let [{:keys [cache-config github-auth]} conn
+  (let [{:keys [github-auth]} conn
         key (str "repos:" owner)
         options (conj github-auth {:type "public" :all-pages true})]
-    (cached repos/user-repos cache-config key options owner)))
+    (request repos/user-repos owner github-auth)))
 
 (defn user-repo [conn owner repo-name]
-  (let [{:keys [cache-config github-auth]} conn
+  (let [{:keys [github-auth]} conn
         key (str "repo:" owner ":" repo-name)]
-    (cached repos/specific-repo cache-config key github-auth owner repo-name)))
+    (request repos/specific-repo owner repo-name github-auth)))
 
 (defn user-orgs [conn user]
-  (let [{:keys [cache-config github-auth]} conn
+  (let [{:keys [github-auth]} conn
         key (str "user-orgs:" user)]
-    (cached orgs/user-orgs cache-config key github-auth user)))
+    (request orgs/user-orgs user github-auth)))
 
 (defn org-repos [conn org]
-  (let [{:keys [cache-config github-auth]} conn
+  (let [{:keys [github-auth]} conn
         key (str "org-repos:" org)
         options (conj github-auth {:type "all" :all-pages true})]
-    (cached repos/org-repos cache-config key options org)))
+    (request repos/org-repos org options)))
 
 (defn repo-contributors [conn repo]
-  (let [{:keys [cache-config github-auth]} conn
+  (let [{:keys [github-auth]} conn
         repo-name (repo :name)
         owner (get-in repo [:owner :login])
         key (str "repo:" owner ":" repo-name ":stats:contributors")
-        users (cached repos/contributor-statistics cache-config key github-auth owner repo-name)]
+        users (request repos/contributor-statistics owner repo-name github-auth)]
     (zipmap (map #(get-in % [:author :login]) users) users)))
 
 (defn repo-stargazers [conn owner repo-name]
   (let [{:keys [github-auth]} conn
         options (conj github-auth {:all-pages true})]
-    (repos/stargazers owner repo-name github-auth)))
+    (request repos/stargazers owner repo-name github-auth)))
+
+(defn rate-limit [conn]
+  (let [{:keys [github-auth]} conn]
+    (request core/rate-limit github-auth)))

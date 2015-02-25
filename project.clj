@@ -15,7 +15,8 @@
                  [hiccup "1.0.5"]
                  [clj-time "0.6.0"]
                  [org.clojure/math.numeric-tower "0.0.4"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                 [schejulure "1.0.1"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
                    :source-paths ["dev"]}}
   :main hubfolio.core)
