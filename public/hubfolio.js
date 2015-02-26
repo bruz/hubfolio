@@ -1,4 +1,6 @@
-$('.ui.label').popup();
+$(document).ready(function(){
+  $('.ui.label').popup();
+});
 
 function checkStatus() {
   var url = location.href + '/status';
