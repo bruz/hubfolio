@@ -26,7 +26,7 @@
        {:web
         {:port 3002}
         :storage
-        {:uri "redis://localhost:6379"}
+        {:spec {:uri "redis://localhost:6379"}}
         :github
         {:oauth-token "27e5dcc01e01e5609213a780d10487259667318b"}}))))
 

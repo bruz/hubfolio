@@ -31,6 +31,6 @@
    (system {:web
             {:port (port)}
             :storage
-            {:uri (redis-url)}
+            {:spec {:uri (redis-url)}}
             :github
             {:oauth-token "27e5dcc01e01e5609213a780d10487259667318b"}})))
