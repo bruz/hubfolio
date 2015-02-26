@@ -1,5 +1,9 @@
 $(document).ready(function(){
   $('.ui.label').popup();
+
+  $('.check-status').click(function() {
+    location.reload();
+  });
 });
 
 function checkStatus() {

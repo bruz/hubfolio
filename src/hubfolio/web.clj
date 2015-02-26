@@ -41,7 +41,15 @@
 (defn format-imprecise [number]
   (format "%.1f" (float number)))
 
-(defn not-opted-in [username] (str username " not-opted-in"))
+(defn not-opted-in [username]
+  (with-layout
+    [:div.ui.stackable.segment
+     [:div.ui.stackable.center.aligned.page.grid
+      [:div.fourteen.wide.column
+       [:h1.ui.header (str username " has not opted in")]
+       [:p (str "Are you " username "? Have your hubfolio made by ")
+        [:a {:href "https://github.com/bruz/hubfolio"} "starring the hubfolio repo."]]
+       [:a.ui.labeled.primary.button.check-status "Check again"]]]]))
 
 (defn generating [username]
   (with-layout
