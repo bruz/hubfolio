@@ -56,7 +56,8 @@
                (generate conn store-config username)
                (user-status/set-last-updated store-config username updated-at)
                (reschedule [username updated-at] generator-chan)
-               (log-rate-limit conn)))
+               (log-rate-limit conn))
+             (recur))
     generator-chan))
 
 (defrecord Generator [stats-conn store-config]
