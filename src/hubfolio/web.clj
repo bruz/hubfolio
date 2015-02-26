@@ -29,6 +29,7 @@
        [:div.row
         [:div.fourteen.wide.column
          [:h1.ui.header "Hubfolio"]
+         [:p "A portfolio of you most relevant GitHub repos."]
          [:div.ui.search
           [:form {:action "/" :method "post"}
            (anti-forgery-field)
