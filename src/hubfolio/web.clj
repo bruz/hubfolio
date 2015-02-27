@@ -26,21 +26,20 @@
 
 (defn home []
   (with-layout
-    [:div
-     [:div.ui.segment
-      [:div.ui.center.aligned.stackable.very.relaxed.page.grid
-       [:div.row
-        [:div.fourteen.wide.column
-         [:h1.ui.header "Hubfolio"]
-         [:p "A portfolio of you most relevant GitHub repos."]
-         [:div.ui.search
-          [:form {:action "/" :method "post"}
-           (anti-forgery-field)
-           [:div.ui.icon.input
-            [:input.prompt {:type "text"
-                            :name "username"
-                            :placeholder "GitHub username"}]
-            [:i.search.icon]]]]]]]]]))
+    [:div.ui.segment
+     [:div.ui.center.aligned.stackable.very.relaxed.page.grid
+      [:div.row
+       [:div.fourteen.wide.column
+        [:h1.ui.header "Hubfolio"]
+        [:p "A portfolio of you most relevant GitHub repos."]
+        [:div.ui.search
+         [:form {:action "/" :method "post"}
+          (anti-forgery-field)
+          [:div.ui.icon.input
+           [:input.prompt {:type "text"
+                           :name "username"
+                           :placeholder "GitHub username"}]
+           [:i.search.icon]]]]]]]]))
 
 (defn format-imprecise [number]
   (format "%.1f" (float number)))
