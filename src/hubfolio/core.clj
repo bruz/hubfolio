@@ -21,7 +21,7 @@
 (defn -main [& args]
   (component/start
    (system {:web
-            {:port (env :port)}
+            {:port (read-string (env :port))}
             :storage
             {:spec {:uri (env :redis-url)}}
             :github
