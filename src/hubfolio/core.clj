@@ -3,7 +3,8 @@
             [hubfolio.statistics :refer [new-statistics]]
             [hubfolio.generator :refer [new-generator]]
             [hubfolio.server :refer [new-web-server]]
-            [hubfolio.web :refer [new-web-handler]])
+            [hubfolio.web :refer [new-web-handler]]
+            [environ.core :refer [env]])
   (:gen-class))
 
 (defn system [config]
@@ -17,20 +18,11 @@
          :web {:stats-conn :statistics :generator :generator}
          :server {:web-handler :web}})))
 
-(defn port []
-  (or (if-let [port-string (System/getenv "PORT")]
-        (read-string port-string))
-      5000))
-
-(defn redis-url []
-  (or (System/getenv "REDIS_URL")
-      "redis://localhost:6379"))
-
 (defn -main [& args]
   (component/start
    (system {:web
-            {:port (port)}
+            {:port (env :port)}
             :storage
-            {:spec {:uri (redis-url)}}
+            {:spec {:uri (env :redis-url)}}
             :github
-            {:oauth-token "27e5dcc01e01e5609213a780d10487259667318b"}})))
+            {:oauth-token (env :oauth-token)}})))

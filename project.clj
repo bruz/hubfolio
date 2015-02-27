@@ -16,7 +16,8 @@
                  [clj-time "0.6.0"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [schejulure "1.0.1"]]
+                 [schejulure "1.0.1"]
+                 [environ "1.0.0"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.7"]]
                    :source-paths ["dev"]}
              :uberjar {:aot :all}}
