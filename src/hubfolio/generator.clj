@@ -34,7 +34,7 @@
     (doseq [user users] (reschedule user generator-chan))))
 
 (defn timestamp []
-  (f/unparse (f/formatters :ordinal-date-time) (t/now)))
+  (f/unparse (f/formatters :date-time) (t/now)))
 
 (defn generate [stats-conn store-config username]
   (println (str "Generating stats: " username))
