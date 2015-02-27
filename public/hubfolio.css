@@ -13,3 +13,7 @@
   max-height: 4em;
   overflow: hidden;
 }
+
+.ui.fixed.menu+.ui.grid {
+  padding-top: 4.5rem;
+}

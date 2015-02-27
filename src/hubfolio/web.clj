@@ -19,7 +19,10 @@
     [:link {:href "/hubfolio.css" :rel "stylesheet"}]
     [:script {:src "/hubfolio.js"}]]
    [:body
-    content]))
+    [:nav.ui.fixed.menu
+     [:a.brand.item {:href "/"} "Hubfolio"]]
+    [:main.ui.grid
+     content]]))
 
 (defn home []
   (with-layout
