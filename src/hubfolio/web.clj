@@ -13,9 +13,9 @@
 (defn with-layout [content]
   (html
    [:head
-    [:link {:href "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.css" :rel "stylesheet"}]
+    [:link {:href "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.10.2/semantic.min.css" :rel "stylesheet"}]
     [:script {:src "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"}]
-    [:script {:src "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.js"}]
+    [:script {:src "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.10.2/semantic.min.js"}]
     [:link {:href "/hubfolio.css" :rel "stylesheet"}]
     [:script {:src "/hubfolio.js"}]]
    [:body
