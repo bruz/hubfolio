@@ -8,7 +8,7 @@
 (defn check-starred [generator github-auth store-config username]
   (let [stargazers (github/repo-stargazers github-auth "bruz" "hubfolio")
         generator-chan (:chan generator)]
-    (if true;;(some #(= (:login %) username) stargazers)
+    (if (some #(= (:login %) username) stargazers)
       (do
         (go (>! generator-chan username))
         :generating)
