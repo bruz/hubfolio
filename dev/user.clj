@@ -12,7 +12,8 @@
    [clojure.test :as test]
    [clojure.tools.namespace.repl :refer [refresh refresh-all]]
    [com.stuartsierra.component :as component]
-   [hubfolio.core :as core]))
+   [hubfolio.core :as core]
+   [environ.core :refer [env]]))
 
 (def system
   "A Var containing an object representing the application under
@@ -21,14 +22,14 @@
 
 (defn init []
   (alter-var-root #'system
-    (constantly
-      (core/system
-       {:web
-        {:port 3002}
-        :storage
-        {:spec {:uri "redis://localhost:6379"}}
-        :github
-        {:oauth-token "27e5dcc01e01e5609213a780d10487259667318b"}}))))
+                  (constantly
+                   (core/system
+                    {:web
+                     {:port (read-string (env :port))}
+                     :storage
+                     {:spec {:uri (env :redis-url)}}
+                     :github
+                     {:oauth-token (env :oauth-token)}}))))
 
 (defn start []
   (alter-var-root #'system component/start))
