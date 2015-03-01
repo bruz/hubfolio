@@ -54,6 +54,15 @@
         [:a {:href "https://github.com/bruz/hubfolio"} "starring the hubfolio repo."]]
        [:a.ui.labeled.primary.button.check-status "Check again"]]]]))
 
+(defn failed [username]
+  (with-layout
+    [:div.ui.stackable.segment
+     [:div.ui.stackable.center.aligned.page.grid
+      [:div.fourteen.wide.column
+       [:h1.ui.header "Oh no!"]
+       [:p (str "Alas, generating statistics for " username " has failed")]
+       [:a.ui.labeled.primary.button {:href "mailto:bruz.marzolf@gmail.com"} "Let someone know"]]]]))
+
 (defn generating [username]
   (with-layout
     [:div
@@ -129,6 +138,7 @@
     (case
       status
       :not-opted-in (not-opted-in username)
+      :failed (failed username)
       :generating (generating username)
       :generated (generated username store-config))))
 

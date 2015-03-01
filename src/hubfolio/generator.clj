@@ -38,9 +38,14 @@
 
 (defn generate [stats-conn store-config username]
   (println (str "Generating stats: " username))
-  (let [data {:user (stats/user stats-conn username)
-              :repos (stats/repos stats-conn username)}]
-    (user-data/save store-config username data)))
+  (try
+    (let [data {:user (stats/user stats-conn username)
+                :repos (stats/repos stats-conn username)}]
+      (user-data/save store-config username data))
+    (catch Exception e
+      (user-status/set-last-updated store-config username :failed)
+      (throw e))))
+
 
 (defn log-rate-limit [conn]
   (let [data (github/rate-limit conn)
