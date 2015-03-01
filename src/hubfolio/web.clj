@@ -21,7 +21,7 @@
    [:body
     [:nav.ui.fixed.menu
      [:a.brand.item {:href "/"} "Hubfolio"]]
-    [:main.ui.grid
+    [:main
      content]]))
 
 (defn home []
@@ -57,14 +57,16 @@
 (defn generating [username]
   (with-layout
     [:div
-     [:div.ui.segment
-      [:div.ui.active.inverted.dimmer
-       [:div.ui.indeterminate.text.active.loader "Generating... this may take a while"]]
-      [:br]
-      [:br]
-      [:br]
-      [:br]
-      [:br]]
+     [:div.ui.stackable.segment
+      [:div.ui.stackable.center.aligned.page.grid
+       [:div.fourteen.wide.column
+        [:div.ui.active.inverted.dimmer
+         [:div.ui.indeterminate.text.active.loader "Generating... this may take a while"]]
+        [:br]
+        [:br]
+        [:br]
+        [:br]
+        [:br]]]]
      [:script "$(document).ready(function(){ checkStatus(); });"]]))
 
 (defn generated [username store-config]
