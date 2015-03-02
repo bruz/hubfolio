@@ -30,7 +30,7 @@
     (->> (case (or last-updated :not-opted-in)
            :generating :generating
            :failed :failed
-           :not-opted-in (check-starred generator github-auth store-config username)
+           :not-opted-in (check-starred generator github-auth username)
            last-updated)
          (set-last-updated store-config username))))
 
