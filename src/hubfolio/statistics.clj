@@ -10,7 +10,9 @@
 
 (defn repo-total-commits [conn repo]
   (let [contributors (github/repo-contributors conn repo)]
-    (reduce + (map :total (vals contributors)))))
+    (or
+     (reduce + (map :total (vals contributors)))
+     0)))
 
 (defn repo-user-commits [conn repo username]
   (let [contributors (github/repo-contributors conn repo)]
