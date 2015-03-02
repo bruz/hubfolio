@@ -78,6 +78,48 @@
         [:br]]]]
      [:script "$(document).ready(function(){ checkStatus(); });"]]))
 
+(defn repo-cards [username repos]
+  [:div.ui.column
+   [:div.ui.cards
+    (for [repo repos]
+      [:div.ui.card
+       [:div.content
+        [:div.right.floated
+         [:div.ui.top.right.attached.green.label {:data-content "Combination of starshare, user commits and years stale into a single metric"} "Score"
+          [:div.detail (format-imprecise (repo :score))]]]
+        [:a.header {:href (repo :html_url)}
+         (cond
+          (repo :fork) [:i.fork.icon]
+          (repo :org-repo) [:i.users.icon])
+         (repo :name)]
+        [:div.description (repo :description)]]
+       [:div.extra.content
+        [:div.ui.padded.grid
+         [:div.two.column.row
+          [:div.ui.small.label {:data-content (str "Number of stars " username " gets credit for on this repo. Determined by applying the percentage of commits the user has contributed to the total number of stars.")} "Starshare"
+           [:div.detail
+            [:i.star.icon]
+            (format-imprecise (repo :starshare))]]
+          [:div.right.floated
+           [:div.ui.small.label {:data-content (str "Commits by " username " to this repo")} "User commits"
+            [:div.detail
+             [:i.user.icon]
+             (repo :user-commits)]]]]
+         [:div.two.column.row
+          [:div.ui.small.label {:data-content "Number of years since the last commit by anyone to this repo"} "Years stale"
+           [:div.detail
+            [:i.wait.icon]
+            (repo :stale-years)]]
+          [:div.right.floated
+           [:div.ui.small.label {:data-content "Total commits by all users to this repo"} "Total commits"
+            [:div.detail
+             [:i.users.icon]
+             (repo :total-commits)]]]]]]])]])
+
+(defn no-repos []
+  [:div.ui.center.aligned.column
+   [:h3 "No repos with commits found"]])
+
 (defn generated [username store-config]
   (let [{:keys [user repos]} (user-data/retrieve store-config username)]
     (with-layout
@@ -96,42 +138,9 @@
        [:div.ui.left.aligned.vertical.segment
         [:div.ui.page.grid
          [:div.row
-          [:div.column
-        [:div.ui.cards
-         (for [repo repos]
-          [:div.ui.card
-           [:div.content
-            [:div.right.floated
-             [:div.ui.top.right.attached.green.label {:data-content "Combination of starshare, user commits and years stale into a single metric"} "Score"
-              [:div.detail (format-imprecise (repo :score))]]]
-            [:a.header {:href (repo :html_url)}
-             (cond
-              (repo :fork) [:i.fork.icon]
-              (repo :org-repo) [:i.users.icon])
-             (repo :name)]
-            [:div.description (repo :description)]]
-           [:div.extra.content
-            [:div.ui.padded.grid
-             [:div.two.column.row
-            [:div.ui.small.label {:data-content (str "Number of stars " username " gets credit for on this repo. Determined by applying the percentage of commits the user has contributed to the total number of stars.")} "Starshare"
-             [:div.detail
-              [:i.star.icon]
-              (format-imprecise (repo :starshare))]]
-            [:div.right.floated
-             [:div.ui.small.label {:data-content (str "Commits by " username " to this repo")} "User commits"
-              [:div.detail
-               [:i.user.icon]
-               (repo :user-commits)]]]]
-             [:div.two.column.row
-            [:div.ui.small.label {:data-content "Number of years since the last commit by anyone to this repo"} "Years stale"
-             [:div.detail
-              [:i.wait.icon]
-              (repo :stale-years)]]
-            [:div.right.floated
-             [:div.ui.small.label {:data-content "Total commits by all users to this repo"} "Total commits"
-              [:div.detail
-               [:i.users.icon]
-               (repo :total-commits)]]]]]]])]]]]]])))
+          (if (empty? repos)
+            (no-repos)
+            (repo-cards username repos))]]]])))
 
 (defn user [username stats-conn generator github-auth store-config]
   (let [status (user-status/get-status generator github-auth store-config username)]
