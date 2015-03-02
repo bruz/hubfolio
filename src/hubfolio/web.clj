@@ -54,6 +54,14 @@
         [:a {:href "https://github.com/bruz/hubfolio"} "starring the hubfolio repo."]]
        [:a.ui.labeled.primary.button.check-status "Check again"]]]]))
 
+(defn no-user [username]
+  (with-layout
+    [:div.ui.stackable.segment
+     [:div.ui.stackable.center.aligned.page.grid
+      [:div.fourteen.wide.column
+       [:h1.ui.header (str username " not found")]
+       [:p (str "There doesn't appear to be a GitHub account for " username ".")]]]]))
+
 (defn failed [username]
   (with-layout
     [:div.ui.stackable.segment
@@ -147,6 +155,7 @@
     (case
       status
       :not-opted-in (not-opted-in username)
+      :no-user (no-user username)
       :failed (failed username)
       :generating (generating username)
       :generated (generated username store-config))))
