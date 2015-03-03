@@ -95,7 +95,7 @@
         [:div.right.floated
          [:div.ui.top.right.attached.green.label {:data-content "Combination of starshare, user commits and time since last commit"} "Score"
           [:div.detail (format-imprecise (repo :score))]]]
-        [:a.header {:href (repo :html_url)}
+        [:a.header {:href (repo :html_url) :target "_blank"}
          (cond
           (repo :fork) [:i.fork.icon]
           (repo :org-repo) [:i.users.icon])
