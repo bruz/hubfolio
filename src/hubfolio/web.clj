@@ -93,7 +93,7 @@
       [:div.ui.card
        [:div.content
         [:div.right.floated
-         [:div.ui.top.right.attached.green.label {:data-content "Combination of starshare, user commits and years stale into a single metric"} "Score"
+         [:div.ui.top.right.attached.green.label {:data-content "Combination of starshare, user commits and time since last commit"} "Score"
           [:div.detail (format-imprecise (repo :score))]]]
         [:a.header {:href (repo :html_url)}
          (cond
@@ -114,7 +114,7 @@
              [:i.user.icon]
              (repo :user-commits)]]]]
          [:div.two.column.row
-          [:div.ui.small.label {:data-content "Number of years since the last commit by anyone to this repo"} "Years stale"
+          [:div.ui.small.label {:data-content "Number of years since the last commit by anyone to this repo"} "Last commit age"
            [:div.detail
             [:i.wait.icon]
             (repo :stale-years)]]
