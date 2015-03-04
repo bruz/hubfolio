@@ -17,3 +17,7 @@
 main {
   padding-top: 2.5rem;
 }
+
+form {
+  margin: 0;
+}

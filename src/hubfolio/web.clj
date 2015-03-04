@@ -21,7 +21,16 @@
    [:body
     [:nav.ui.fixed.menu
      [:a.brand.item {:href "/"} "Hubfolio"]
-     [:a.brand.item {:href "/faq"} "FAQ"]]
+     [:a.brand.item {:href "/faq"} "FAQ"]
+     [:div.right.menu
+      [:div.item
+       [:div.ui.transparent.icon.input
+         [:form {:action "/" :method "post"}
+          (anti-forgery-field)
+          [:input.prompt {:type "text"
+                           :name "username"
+                           :placeholder "GitHub username"}]]
+          [:i.search.link.icon]]]]]
     [:main
      content]]))
 
