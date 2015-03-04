@@ -20,7 +20,8 @@
     [:script {:src "/hubfolio.js"}]]
    [:body
     [:nav.ui.fixed.menu
-     [:a.brand.item {:href "/"} "Hubfolio"]]
+     [:a.brand.item {:href "/"} "Hubfolio"]
+     [:a.brand.item {:href "/faq"} "FAQ"]]
     [:main
      content]]))
 
@@ -160,10 +161,42 @@
       :generating (generating username)
       :generated (generated username store-config))))
 
+(defn faq []
+  (with-layout
+    [:div.ui.stackable.segment
+     [:div.ui.stackable.center.aligned.page.grid
+      [:div.center.aligned.fourteen.wide.column
+       [:h1.ui.header "Frequently Asked Questions"]]
+      [:div.left.aligned.fourteen.wide.column
+       [:div.ui.list
+        [:div.item
+         [:div.header
+          "Why do I have to start the "
+          [:a {:href "https://github.com/bruz/hubfolio"} "Hubfolio repo"]
+          " to have my stats generated?"]
+         "It's opt-in since not everyone wants their GitHub account to be seen
+          as a portfolio of their work. Starring the repo is a convenient way
+          to prove ownership of your GitHub account."]
+        [:div.item
+         [:div.header "How are the different metrics calculated?"]
+         [:ul
+          [:li "User commits: Number of commits contributed to the master
+           branch of the repo by the user in approximately the last year."]
+          [:li "Total commits: Total number of commits by all users to the
+           master branch of the repo in approximately the last year."]
+          [:li "Last commit age: Number of years since anyone has made
+          a commit to the repo"]
+          [:li "Starshare: " [:img {:src "/starshare-calculation.gif" :class "ui middle aligned image"}]]
+          [:li "Score: " [:img {:src "/score-calculation.gif" :class "ui middle aligned image"}]]]
+         "For more details, see the "
+         [:a {:href "https://github.com/bruz/hubfolio"} "source on GitHub"]]]]]]))
+
+
 (defn create-routes [stats-conn generator github-auth store-config]
   (routes
     (GET "/" [] (home))
     (route/files "/" {:root "public"})
+    (GET "/faq" [] (faq))
     (POST "/" [username] (redirect (str "/" username)))
     (GET "/:username" [username] (user username stats-conn generator github-auth store-config))
     (GET "/:username/status" [username] (name (user-status/get-status generator github-auth store-config username)))))
