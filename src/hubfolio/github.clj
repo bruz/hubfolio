@@ -28,8 +28,8 @@
 (defn user-repos [conn owner]
   (let [{:keys [github-auth]} conn
         key (str "repos:" owner)
-        options (conj github-auth {:type "public" :all-pages true})]
-    (request repos/user-repos owner github-auth)))
+        options (conj github-auth {:type "all" :all-pages true})]
+    (request repos/user-repos owner options)))
 
 (defn user-repo [conn owner repo-name]
   (let [{:keys [github-auth]} conn
