@@ -16,6 +16,7 @@
     [:link {:href "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.10.2/semantic.min.css" :rel "stylesheet"}]
     [:script {:src "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"}]
     [:script {:src "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.10.2/semantic.min.js"}]
+    [:script {:src "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"}]
     [:link {:href "/hubfolio.css" :rel "stylesheet"}]
     [:script {:src "/hubfolio.js"}]]
    [:body
@@ -195,8 +196,8 @@
            master branch of the repo in approximately the last year."]
           [:li "Last commit age: Number of years since anyone has made
           a commit to the repo"]
-          [:li "Starshare: " [:img {:src "/starshare-calculation.gif" :class "ui middle aligned image"}]]
-          [:li "Score: " [:img {:src "/score-calculation.gif" :class "ui middle aligned image"}]]]
+          [:li "Starshare: \\[\\frac{commits_{user}}{commits_{total}}\\times{stars}\\]"]
+          [:li "Score: \\[log_2(starshare)\\times log_2(commits_{user})\\times \\frac{1}{2^{age}}\\]"]]
          "For more details, see the "
          [:a {:href "https://github.com/bruz/hubfolio"} "source on GitHub"]]]]]]))
 
