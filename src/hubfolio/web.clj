@@ -181,7 +181,7 @@
        [:div.ui.list
         [:div.item
          [:div.header
-          "Why do I have to start the "
+          "Why do I have to star the "
           [:a {:href "https://github.com/bruz/hubfolio"} "Hubfolio repo"]
           " to have my stats generated?"]
          "It's opt-in since not everyone wants their GitHub account to be seen
