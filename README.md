@@ -1,6 +1,6 @@
 # Hubfolio
 
-Builds a portfolio of GitHub repos you own or have contributed to, ranked by a combination of four metrics. See [hubfol.io](http://hubfol.io/).
+Builds a portfolio of GitHub repos you own or have contributed to, ranked by a combination of four metrics.
 
 ## Development
 
